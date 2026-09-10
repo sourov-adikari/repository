@@ -1,0 +1,4 @@
+import { errorResponse, rateLimit, respond } from "@/app/api/response";
+import { ServiceError } from "@/lib/mail";
+export const runtime = "nodejs";
+export async function GET(request: Request) { const limited = rateLimit(request, "api", 100, 900000); if (limited) return limited; try { const username = process.env.GITHUB_USERNAME ?? "URSourovAdikari"; const headers: Record<string, string> = { Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" }; if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`; const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?type=public&sort=updated&per_page=100`, { headers, next: { revalidate: 300 } }); if (!response.ok) throw new ServiceError(502, "GitHub service is unavailable", "GITHUB_API_ERROR"); return respond({ repositories: await response.json() }, 200, request); } catch (error) { return errorResponse(error, request); } }
