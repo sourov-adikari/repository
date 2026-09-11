@@ -1,25 +1,29 @@
 "use client";
 
-import React, { useCallback, useRef } from "react";
+import React, {
+  useCallback,
+  useRef,
+  useSyncExternalStore
+} from "react";
 import { Moon, Sun } from "lucide-react";
 import { flushSync } from "react-dom";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
-export type AnimationType =
-  | "none"
-  | "circle-spread"
-  | "round-morph"
-  | "swipe-left"
-  | "swipe-up"
-  | "diag-down-right"
-  | "fade-in-out"
-  | "shrink-grow"
-  | "flip-x-in"
-  | "split-vertical"
-  | "swipe-right"
-  | "swipe-down"
-  | "wave-ripple";
+export type AnimationType = |
+  "none" |
+  "circle-spread" |
+  "round-morph" |
+  "swipe-left" |
+  "swipe-up" |
+  "diag-down-right" |
+  "fade-in-out" |
+  "shrink-grow" |
+  "flip-x-in" |
+  "split-vertical" |
+  "swipe-right" |
+  "swipe-down" |
+  "wave-ripple";
 
 const ANIMATION_TYPES: AnimationType[] = [
   "circle-spread",
@@ -37,9 +41,9 @@ const ANIMATION_TYPES: AnimationType[] = [
 ];
 
 export interface ToggleThemeProps
-  extends React.ComponentPropsWithoutRef<"button"> {
-  duration?: number;
-  animationType?: AnimationType | "random";
+extends React.ComponentPropsWithoutRef < "button" > {
+  duration ? : number;
+  animationType ? : AnimationType | "random";
 }
 
 export function ThemeToggle({
@@ -48,258 +52,321 @@ export function ThemeToggle({
   animationType = "random",
   ...props
 }: ToggleThemeProps) {
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef < HTMLButtonElement > (null);
   const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
+  
+  const mounted = useSyncExternalStore( () => () => {}, () => true, () => false, );
 
+  const isDark = resolvedTheme === "dark";
+  
   const toggleTheme = useCallback(async () => {
     const currentAnimation: AnimationType =
-      animationType === "random"
-        ? ANIMATION_TYPES[Math.floor(Math.random() * ANIMATION_TYPES.length)]
-        : animationType;
-
+      animationType === "random" ?
+      ANIMATION_TYPES[
+        Math.floor(Math.random() * ANIMATION_TYPES.length)
+      ] :
+      animationType;
+    
     const newTheme = !isDark;
-
-    // Fallback for browsers that do not support View Transitions
-    const startViewTransition = (document as Document & {
-      startViewTransition?: (callback: () => void) => { ready: Promise<void> };
-    }).startViewTransition;
-
+    
+    const startViewTransition = (
+      document as Document & {
+        startViewTransition ? : (
+          callback: () => void,
+        ) => {
+          ready: Promise < void > ;
+        };
+      }
+    ).startViewTransition;
+    
+    // Fallback for browsers that do not support View Transitions.
     if (!startViewTransition) {
       setTheme(newTheme ? "dark" : "light");
       return;
     }
-
+    
     const transition = startViewTransition.call(document, () => {
       flushSync(() => {
         setTheme(newTheme ? "dark" : "light");
       });
     });
-
+    
     await transition.ready;
-
-    // Calculate coordinates and dimensions for spatial animations
+    
     const btn = buttonRef.current;
-    const left = btn ? btn.getBoundingClientRect().left : window.innerWidth / 2;
-    const top = btn ? btn.getBoundingClientRect().top : window.innerHeight / 2;
-    const width = btn ? btn.getBoundingClientRect().width : 40;
-    const height = btn ? btn.getBoundingClientRect().height : 40;
-
+    
+    const left = btn ?
+      btn.getBoundingClientRect().left :
+      window.innerWidth / 2;
+    
+    const top = btn ?
+      btn.getBoundingClientRect().top :
+      window.innerHeight / 2;
+    
+    const width = btn ?
+      btn.getBoundingClientRect().width :
+      40;
+    
+    const height = btn ?
+      btn.getBoundingClientRect().height :
+      40;
+    
     const x = left + width / 2;
     const y = top + height / 2;
+    
     const maxRadius = Math.hypot(
       Math.max(left, window.innerWidth - left),
-      Math.max(top, window.innerHeight - top)
+      Math.max(top, window.innerHeight - top),
     );
+    
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-
+    
     switch (currentAnimation) {
       case "circle-spread":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `circle(0px at ${x}px ${y}px)`,
-              `circle(${maxRadius}px at ${x}px ${y}px)`,
-            ],
-          },
-          {
-            duration,
-            easing: "ease-in-out",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${maxRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "round-morph":
         document.documentElement.animate(
           [
-            { opacity: 0, transform: "scale(0.8) rotate(5deg)" },
-            { opacity: 1, transform: "scale(1) rotate(0deg)" },
-          ],
+          {
+            opacity: 0,
+            transform: "scale(0.8) rotate(5deg)",
+          },
+          {
+            opacity: 1,
+            transform: "scale(1) rotate(0deg)",
+          }, ],
           {
             duration: duration * 1.2,
             easing: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
             pseudoElement: "::view-transition-new(root)",
-          }
+          },
         );
         break;
-
+        
       case "swipe-left":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `inset(0 0 0 ${viewportWidth}px)`,
-              `inset(0 0 0 0)`,
-            ],
-          },
-          {
-            duration,
-            easing: "cubic-bezier(0.2, 0, 0, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            `inset(0 0 0 ${viewportWidth}px)`,
+            "inset(0 0 0 0)",
+          ],
+        },
+        {
+          duration,
+          easing: "cubic-bezier(0.2, 0, 0, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "swipe-right":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `inset(0 ${viewportWidth}px 0 0)`,
-              `inset(0 0 0 0)`,
-            ],
-          },
-          {
-            duration,
-            easing: "cubic-bezier(0.2, 0, 0, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            `inset(0 ${viewportWidth}px 0 0)`,
+            "inset(0 0 0 0)",
+          ],
+        },
+        {
+          duration,
+          easing: "cubic-bezier(0.2, 0, 0, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "swipe-up":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `inset(${viewportHeight}px 0 0 0)`,
-              `inset(0 0 0 0)`,
-            ],
-          },
-          {
-            duration,
-            easing: "cubic-bezier(0.2, 0, 0, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            `inset(${viewportHeight}px 0 0 0)`,
+            "inset(0 0 0 0)",
+          ],
+        },
+        {
+          duration,
+          easing: "cubic-bezier(0.2, 0, 0, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "swipe-down":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `inset(0 0 ${viewportHeight}px 0)`,
-              `inset(0 0 0 0)`,
-            ],
-          },
-          {
-            duration,
-            easing: "cubic-bezier(0.2, 0, 0, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            `inset(0 0 ${viewportHeight}px 0)`,
+            "inset(0 0 0 0)",
+          ],
+        },
+        {
+          duration,
+          easing: "cubic-bezier(0.2, 0, 0, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "diag-down-right":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `polygon(0 0, 0 0, 0 0, 0 0)`,
-              `polygon(0 0, 100% 0, 100% 100%, 0 100%)`,
-            ],
-          },
-          {
-            duration: duration * 1.3,
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            "polygon(0 0, 0 0, 0 0, 0 0)",
+            "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+          ],
+        },
+        {
+          duration: duration * 1.3,
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "fade-in-out":
         document.documentElement.animate(
-          {
-            opacity: [0, 1],
-          },
-          {
-            duration: duration * 0.7,
-            easing: "ease-in-out",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          opacity: [0, 1],
+        },
+        {
+          duration: duration * 0.7,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "shrink-grow":
         document.documentElement.animate(
           [
-            { transform: "scale(0.9)", opacity: 0 },
-            { transform: "scale(1)", opacity: 1 },
-          ],
+          {
+            transform: "scale(0.9)",
+            opacity: 0,
+          },
+          {
+            transform: "scale(1)",
+            opacity: 1,
+          }, ],
           {
             duration: duration * 1.2,
             easing: "cubic-bezier(0.19, 1, 0.22, 1)",
             pseudoElement: "::view-transition-new(root)",
-          }
+          },
         );
         break;
-
+        
       case "flip-x-in":
         document.documentElement.animate(
           [
-            { transform: "rotateY(90deg)", opacity: 0 },
-            { transform: "rotateY(0deg)", opacity: 1 },
-          ],
+          {
+            transform: "rotateY(90deg)",
+            opacity: 0,
+          },
+          {
+            transform: "rotateY(0deg)",
+            opacity: 1,
+          }, ],
           {
             duration: duration * 1.1,
             easing: "ease-out",
             pseudoElement: "::view-transition-new(root)",
-          }
+          },
         );
         break;
-
+        
       case "split-vertical":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `inset(50% 0 50% 0)`,
-              `inset(0 0 0 0)`,
-            ],
-          },
-          {
-            duration: duration * 1.3,
-            easing: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            "inset(50% 0 50% 0)",
+            "inset(0 0 0 0)",
+          ],
+        },
+        {
+          duration: duration * 1.3,
+          easing: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "wave-ripple":
         document.documentElement.animate(
-          {
-            clipPath: [
-              `circle(0% at 50% 50%)`,
-              `circle(${maxRadius}px at 50% 50%)`,
-            ],
-          },
-          {
-            duration: duration * 1.3,
-            easing: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        );
+        {
+          clipPath: [
+            "circle(0% at 50% 50%)",
+            `circle(${maxRadius}px at 50% 50%)`,
+          ],
+        },
+        {
+          duration: duration * 1.3,
+          easing: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+          pseudoElement: "::view-transition-new(root)",
+        }, );
         break;
-
+        
       case "none":
       default:
         break;
     }
   }, [isDark, duration, animationType, setTheme]);
-
+  
+  /*
+   * Do not render theme-dependent UI until the client has mounted.
+   * This prevents the server from rendering one icon while the client
+   * renders another based on the resolved theme.
+   */
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        ref={buttonRef}
+        className={cn(
+          "p-2.5 rounded-full glass-panel border border-foreground/10 text-foreground shadow-md flex items-center justify-center",
+          className,
+        )}
+        aria-label="Toggle Theme"
+        disabled
+        {...props}
+      >
+        <span
+          className="h-5 w-5"
+          aria-hidden="true"
+        />
+      </button>
+    );
+  }
+  
   return (
     <button
+      type="button"
       ref={buttonRef}
       onClick={toggleTheme}
       className={cn(
         "p-2.5 rounded-full glass-panel border border-foreground/10 hover:border-primary/40 text-foreground transition-all shadow-md flex items-center justify-center cursor-pointer hover:scale-105 active:scale-95",
-        className
+        className,
       )}
       aria-label="Toggle Theme"
       title={isDark ? "Switch to light theme" : "Switch to dark theme"}
       {...props}
     >
       {isDark ? (
-        <Sun className="h-5 w-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+        <Sun
+          className="h-5 w-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+          aria-hidden="true"
+        />
       ) : (
-        <Moon className="h-5 w-5 text-indigo-500 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+        <Moon
+          className="h-5 w-5 text-indigo-500 drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]"
+          aria-hidden="true"
+        />
       )}
     </button>
   );

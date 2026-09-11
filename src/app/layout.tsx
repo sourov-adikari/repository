@@ -3,7 +3,7 @@ import { Suspense, type ReactNode } from "react";
 import "@fontsource/geist-sans/400.css";
 import "@fontsource/geist-sans/700.css";
 import "./globals.css";
-import Header from "@/components/Header/Header";
+import { Header } from "@/components/Header/Header";
 import { Footer } from "@/components/Footer/Footer";
 import { SmoothScroll } from "@/components/SmoothScroll/SmoothScroll";
 import { ThemeProvider } from "@/components/ThemeProvider";

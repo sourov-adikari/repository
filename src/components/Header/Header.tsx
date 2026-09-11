@@ -22,7 +22,7 @@ const navItems = [
 
 const commandItems = navItems;
 
-export default function Header({ portfolio }: { portfolio: Portfolio }) {
+export const Header = ({ portfolio }: { portfolio: Portfolio }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [commandQuery, setCommandQuery] = useState("");
