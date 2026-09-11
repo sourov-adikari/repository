@@ -8,4 +8,4 @@ export interface Education { id?: string | number; degree?: string; school?: str
 export interface Language { id?: string | number; name: string; level?: string; [key: string]: ReactNode; }
 export interface Social { id?: string | number; name?: string; platform?: string; url: string; [key: string]: ReactNode; }
 export interface Service { id?: string | number; title: string; description: string; focus?: string[]; [key: string]: ReactNode; }
-export interface Testimonial { name: string; role: string; content: string; image: string; }
+export interface Testimonial { name: string; role: string; content: string; image: string; rating: number; }
