@@ -5,7 +5,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
-    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem enableColorScheme={false}>
+    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem enableColorScheme={false} storageKey="sourov-theme">
       {children}
     </NextThemesProvider>
   );

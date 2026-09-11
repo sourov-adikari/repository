@@ -177,7 +177,7 @@ export default function Header({ portfolio }: { portfolio: Portfolio }) {
           <Link href="/" onClick={() => handleNavClick("/")} className="cursor-pointer font-extrabold text-lg flex items-center gap-3 group select-none" aria-label="Go to home">
             <div className="relative h-8 w-8 rounded-xl bg-gradient-to-tr from-purple-600 via-primary to-sky-400 p-[1px] shadow-lg group-hover:scale-105 transition-transform duration-300">
               <div className="w-full h-full bg-background rounded-[11px] flex items-center justify-center">
-                <Image src="/favicon.png" alt="" width={32} height={32} className="w-full h-full rounded-[11px] object-cover" />
+                <Image src="/favicon.png" alt="" width={32} height={32} className="w-full h-full rounded-[11px] object-cover" preload/>
               </div>
             </div>
             <div className="hidden sm:flex flex-col text-left">
@@ -253,7 +253,7 @@ export default function Header({ portfolio }: { portfolio: Portfolio }) {
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-purple-600 via-primary to-sky-400 p-px">
                         <div className="w-full h-full rounded-[11px] bg-background/80 flex items-center justify-center">
-                          <Image src="/favicon.png" alt="" width={32} height={32} className="w-full h-full rounded-[11px] object-cover" />
+                          <Image src="/favicon.png" alt="" width={32} height={32} className="w-full h-full rounded-[11px] object-cover" loading="eager" />
                         </div>
                       </div>
                       <div>
@@ -287,20 +287,6 @@ export default function Header({ portfolio }: { portfolio: Portfolio }) {
                       </li>
                     </ul>
                   </nav>
-
-                  <div className="px-4 pb-4">
-                    <div className="rounded-2xl border border-foreground/[0.08] bg-foreground/[0.025] px-4 py-3 backdrop-blur-md">
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <p className="text-xs font-semibold text-foreground">Quick access</p>
-                          <p className="mt-0.5 text-[10px] text-muted-foreground">All portfolio pages are available here.</p>
-                        </div>
-                        <span className="shrink-0 rounded-full border border-primary/20 bg-primary/10 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-primary">Ready</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mx-4 mb-4 h-1 rounded-full bg-foreground/10" aria-hidden="true" />
                 </div>
               </motion.div>
             </motion.div>

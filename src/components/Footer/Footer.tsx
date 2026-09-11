@@ -142,7 +142,7 @@ export const Footer = ({
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 rounded-xl bg-gradient-to-tr from-purple-600 via-primary to-sky-400 p-[1px] shadow-lg">
               <div className="w-full h-full bg-background rounded-[11px] flex items-center justify-center">
-                <Image src="/favicon.png" alt="" width={36} height={36} className="w-full h-full rounded-[11px] object-cover" />
+                <Image src="/favicon.png" alt="" width={36} height={36} className="w-full h-full rounded-[11px] object-cover" loading="eager" />
               </div>
             </div>
 
