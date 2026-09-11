@@ -6,7 +6,7 @@ import type { Portfolio, Project, Social, Testimonial } from "@/types/portfolio"
 import { HeroSection } from "@/components/HeroSection/HeroSection";
 import { AboutSection } from "@/components/AboutSection/AboutSection";
 import { ProjectsSection } from "@/components/ProjectsSection/ProjectsSection";
-import TestimonialsSection from "@/components/TestimonialsSection/TestimonialsSection";
+import { TestimonialsSection } from "@/components/TestimonialsSection/TestimonialsSection";
 
 export default async function Page() {
   const [portfolioResult, projectsResult, socialsResult, testimonialsResult] = await Promise.allSettled([
