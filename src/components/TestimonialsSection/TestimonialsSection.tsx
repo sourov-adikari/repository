@@ -16,7 +16,11 @@ const TestimonialsSection = ({ testimonials }: { testimonials: Testimonial[] }) 
       {testimonials.map((test, i) => (
         <motion.article key={test.name} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ delay: i * 0.1, duration: 0.5 }} className="group h-full min-w-0 rounded-[1.75rem] border border-foreground/10 bg-card/70 p-6 md:p-7 shadow-sm hover:border-primary/30 transition-colors flex flex-col">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex gap-1 text-primary" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, index) => <Star key={index} className="w-3.5 h-3.5 fill-current" />)}</div>
+            <div className="flex gap-1 text-primary" role="img" aria-label={`${test.rating} out of 5 stars`}>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Star key={index} aria-hidden="true" className={`w-3.5 h-3.5 ${index < test.rating ? "fill-current" : "fill-none opacity-25"}`} />
+              ))}
+            </div>
             <Quote className="w-8 h-8 text-primary/20" />
           </div>
           <blockquote className="flex-1 text-[15px] md:text-base text-muted-foreground leading-7 break-words">“{test.content}”</blockquote>
