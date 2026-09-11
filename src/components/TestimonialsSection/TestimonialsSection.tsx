@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import type { Testimonial } from "@/types/portfolio";
 
-const TestimonialsSection = ({ testimonials }: { testimonials: Testimonial[] }) => (
+export const TestimonialsSection = ({ testimonials }: { testimonials: Testimonial[] }) => (
   <section id="testimonials" className="max-w-7xl mx-auto px-6 py-20 md:py-24">
     <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-12 text-center">
       <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary mb-3">Client feedback</p>
@@ -33,5 +33,3 @@ const TestimonialsSection = ({ testimonials }: { testimonials: Testimonial[] }) 
     </div>}
   </section>
 );
-
-export default TestimonialsSection;
