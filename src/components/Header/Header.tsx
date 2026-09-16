@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Command, Download, Menu, Send, X } from "lucide-react";
+import { Command, Download, Menu, X } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
 import type { Portfolio } from "@/types/portfolio";

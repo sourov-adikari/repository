@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Download, Send, Facebook, Github, Instagram, Linkedin, Mail, MessageCircle } from "lucide-react";
 import TechStackSection from "@/components/TechStackSection/TechStackSection";
@@ -14,16 +15,35 @@ interface HeroSectionProps { portfolio: Portfolio; socials: Social[]; projectCou
 
 export const HeroSection = ({ portfolio, socials, projectCount = 0, experienceYears = 0 }: HeroSectionProps) => {
   const router = useRouter();
+  const prefersReducedMotion = useReducedMotion();
   const name = String(portfolio.fullName ?? portfolio.name ?? "Sourov Chandra Adikari");
   const role = String(portfolio.role ?? portfolio.title ?? "Full Stack Web Developer");
   const bio = String(portfolio.bio ?? portfolio.about ?? "Passionate Full Stack Web Developer building responsive, practical and modern web applications with React, Next.js, TypeScript and Node.js.");
   const location = String(portfolio.location ?? "Pirganj, Bangladesh");
   const experience = experienceYears > 0 ? `${experienceYears}+ Years` : "Since 2023";
   const socialIcon = (social: Social) => { const label = String(social.platform ?? social.name ?? "").toLowerCase(); if (label.includes("facebook")) return Facebook; if (label.includes("instagram")) return Instagram; if (label.includes("whatsapp")) return MessageCircle; if (label.includes("github")) return Github; if (label.includes("linkedin")) return Linkedin; if (label.includes("mail") || label.includes("email")) return Mail; return MessageCircle; };
+  const socialBrandStyle = (social: Social): CSSProperties => { const label = String(social.platform ?? social.name ?? "").toLowerCase(); if (label.includes("facebook")) return { backgroundColor: "#1877F2" }; if (label.includes("instagram")) return { backgroundImage: "linear-gradient(45deg, #FEDA75, #D62976, #4F5BD5)" }; if (label.includes("whatsapp")) return { backgroundColor: "#25D366" }; if (label.includes("github")) return { backgroundColor: "#181717" }; if (label.includes("linkedin")) return { backgroundColor: "#0A66C2" }; if (label.includes("mail") || label.includes("email")) return { backgroundColor: "#EA4335" }; return { backgroundColor: "#6b7280" }; };
   const goToHireMe = () => router.push("/contact?subject=Hire%20Me%20%E2%80%94%20Full%20Stack%20Web%20Development");
 
   return (
     <section id="hero" className="hero-section relative min-h-[100vh] flex flex-col pt-28 md:pt-32 overflow-hidden bg-background">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <motion.div
+          className="absolute left-1/2 top-[40%] h-[380px] w-[380px] -translate-x-[68%] -translate-y-1/2 rounded-full bg-purple-500/25 blur-[110px] dark:bg-purple-500/40 md:h-[520px] md:w-[520px]"
+          animate={prefersReducedMotion ? undefined : { x: [0, 18, 0], y: [0, -14, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute left-1/2 top-[45%] h-[340px] w-[340px] translate-x-[4%] -translate-y-1/2 rounded-full bg-cyan-400/20 blur-[110px] dark:bg-cyan-400/35 md:h-[460px] md:w-[460px]"
+          animate={prefersReducedMotion ? undefined : { x: [0, -20, 0], y: [0, 16, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute left-1/2 top-[62%] h-[300px] w-[300px] -translate-x-[38%] -translate-y-1/2 rounded-full bg-indigo-500/20 blur-[100px] dark:bg-indigo-500/35 md:h-[400px] md:w-[400px]"
+          animate={prefersReducedMotion ? undefined : { x: [0, 12, 0], y: [0, 12, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
       <DotPattern width={16} height={16} cx={1} cy={1} cr={1} glow />
       <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex-1 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-14 pb-10">
         <motion.div className="hero-copy flex-1 flex flex-col items-center md:items-start text-center md:text-left" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
@@ -32,10 +52,10 @@ export const HeroSection = ({ portfolio, socials, projectCount = 0, experienceYe
           <motion.p className="text-base md:text-lg text-muted-foreground max-w-xl mb-6 leading-relaxed w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.8 }}>{bio}</motion.p>
           <motion.div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-7 w-full md:w-auto" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }}>
             <Button onClick={() => router.push("/projects")} size="lg" className="hero-action hero-action-primary rounded-full px-6 h-11 bg-primary text-primary-foreground font-semibold flex items-center gap-1.5 hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:-translate-y-1">View Work <ArrowRight className="w-4 h-4" /></Button>
-            <Button onClick={goToHireMe} size="lg" variant="outline" className="hero-action hero-action-hire rounded-full px-6 h-11 border-primary/30 bg-primary/5 text-foreground font-semibold flex items-center gap-1.5 hover:bg-primary/10 hover:border-primary/50 transition-all hover:-translate-y-1">Hire Me <Send className="w-4 h-4" /></Button>
+            <Button onClick={goToHireMe} size="lg" variant="outline" className="hero-action hero-action-hire rounded-full px-6 h-11 border-primary/30 bg-primary/5 backdrop-blur-sm text-foreground font-semibold flex items-center gap-1.5 hover:bg-primary/10 hover:border-primary/50 transition-all hover:-translate-y-1">Hire Me <Send className="w-4 h-4" /></Button>
             <Button onClick={() => window.open("/resume.pdf", "_blank", "noopener,noreferrer")} size="lg" variant="outline" className="hero-action hero-action-resume rounded-full px-6 h-11 glass-panel text-foreground font-semibold flex items-center gap-1.5 hover:bg-foreground/10 transition-all hover:-translate-y-1 border-foreground/10">Resume <Download className="w-4 h-4" /></Button>
           </motion.div>
-          <motion.div className="flex items-center gap-4 justify-center md:justify-start w-full md:w-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.8 }}>{socials.map((social, i) => { const label = social.platform ?? social.name ?? "Social link"; const Icon = socialIcon(social); return <a key={`${label}-${social.url}-${i}`} href={social.url} target="_blank" rel="noreferrer" aria-label={label} className="text-muted-foreground hover:text-foreground transition-colors hover:-translate-y-1 transform duration-200"><Icon className="w-[18px] h-[18px]" /></a>; })}</motion.div>
+          <motion.div className="flex items-center gap-4 justify-center md:justify-start w-full md:w-auto" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.8 }}>{socials.map((social, i) => { const label = social.platform ?? social.name ?? "Social link"; const Icon = socialIcon(social); return <a key={`${label}-${social.url}-${i}`} href={social.url} target="_blank" rel="noreferrer" aria-label={label} style={{ ...socialBrandStyle(social), color: "#fff" }} className="inline-flex h-9 w-9 items-center justify-center rounded-full border-0 outline-none ring-0 shadow-sm transition-transform duration-200 hover:scale-110 focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 [-webkit-tap-highlight-color:transparent]"><Icon className="w-[18px] h-[18px]" style={{ color: "#fff" }} /></a>; })}</motion.div>
         </motion.div>
         <motion.div className="hero-card-shell flex-1 w-full max-w-md relative flex justify-center items-center py-2" initial={{ opacity: 0, y: -20, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ delay: 0.4, duration: 1, ease: [0.16, 1, 0.3, 1] }}><HangingIdCard name={name} role={role} badgeId="SCA-PROFILE" accentColor="#8b5cf6" ropeLength={75} ropeColor="#27272a" cardWidth="w-72 sm:w-80 md:w-84"><div className="flex flex-col h-full bg-card w-full"><div className="relative px-5 pt-7 pb-6 flex flex-col items-center bg-gradient-to-br from-purple-700 via-primary to-indigo-950 text-white overflow-hidden"><div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" /><div className="mt-1 relative w-28 h-28 rounded-full p-1 bg-gradient-to-tr from-cyan-400 via-primary to-purple-400 backdrop-blur-md shadow-2xl border border-white/50 overflow-hidden"><img src="/sourov.jpg" alt={name} className="w-full h-full object-cover rounded-full filter contrast-105" loading="eager" /><div className="absolute bottom-1 right-2 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white shadow-md" /></div></div><div className="p-5 flex flex-col items-center text-center bg-card text-card-foreground flex-1 gap-3"><div><h3 className="text-xl font-extrabold tracking-tight text-foreground">{name}</h3><div className="inline-flex items-center gap-1.5 mt-1 px-3 py-0.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-xs font-semibold"><span>{role}</span></div></div><div className="w-full border-t border-border/60 my-0.5" /><div className="grid grid-cols-2 gap-2.5 w-full text-left bg-muted/40 p-3 rounded-xl border border-border/50"><div><span className="text-muted-foreground block text-[9px] uppercase tracking-widest font-bold">Specialty</span><span className="font-bold text-foreground text-xs">Full Stack Development</span></div><div><span className="text-muted-foreground block text-[9px] uppercase tracking-widest font-bold">Location</span><span className="font-bold text-foreground text-xs">{location}</span></div><div><span className="text-muted-foreground block text-[9px] uppercase tracking-widest font-bold">Experience</span><span className="font-bold text-foreground text-xs">{experience}</span></div><div><span className="text-muted-foreground block text-[9px] uppercase tracking-widest font-bold">Projects</span><span className="font-bold text-foreground text-xs">{projectCount} total</span></div></div><div className="flex flex-col items-center mt-1 w-full gap-1"><div className="flex gap-[2.5px] items-end h-7 px-3 py-0.5 bg-white/90 dark:bg-black/40 rounded-lg border border-border/40 w-full justify-center">{Array.from({ length: 36 }).map((_, i) => <div key={i} className="bg-foreground rounded-[1px]" style={{ width: i % 4 === 0 ? "3.5px" : i % 2 === 0 ? "2px" : "1px", height: `${50 + Math.sin(i * 1.4) * 45}%` }} />)}</div><div className="flex items-center justify-between w-full px-1 text-[10px]"><span className="font-mono font-bold tracking-widest text-primary">SCA-PROFILE</span><span className="text-muted-foreground font-semibold text-[9px] uppercase tracking-wider">Portfolio</span></div></div></div></div></HangingIdCard></motion.div>
       </div><div className="w-full relative z-10 mt-auto"><TechStackSection /></div>
