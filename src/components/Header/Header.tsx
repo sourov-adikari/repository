@@ -203,20 +203,17 @@ export const Header = ({ portfolio }: { portfolio: Portfolio }) => {
           </nav>
 
           <div className="flex items-center gap-1.5">
-            <a href="/resume.pdf" target="_blank" rel="noreferrer" className="hidden lg:inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-background/50 px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/30 hover:bg-primary/10 hover:text-foreground transition-colors" aria-label="Open resume">
+            <a href="/resume.pdf" target="_blank" rel="noreferrer" className="hidden lg:inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:border-primary/30 hover:bg-primary/10 hover:text-foreground transition-colors" aria-label="Open resume">
               Resume <Download className="w-3.5 h-3.5" />
             </a>
-            <Link href="/contact" onClick={() => handleNavClick("/contact")} className="hidden lg:inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors" aria-label="Go to contact page">
-              Contact <Send className="w-3.5 h-3.5" />
-            </Link>
-              <button type="button" onClick={() => setIsCommandOpen(true)} className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-background/50 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors" aria-label="Open quick navigation (Ctrl K)">
-              <Command className="w-3.5 h-3.5" /><span>Ctrl K</span>
+            <button type="button" onClick={() => setIsCommandOpen(true)} className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-background/50 px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors" aria-label="Open quick navigation (Ctrl K)">
+              <Command className="w-3.5 h-3.5" /><span className="text-nowrap">Ctrl K</span>
             </button>
             <ThemeToggle />
             <button
               ref={mobileTriggerRef}
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden inline-flex items-center justify-center rounded-xl border border-foreground/10 bg-foreground/[0.035] p-2 text-foreground transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary active:scale-95"
+              className="md:hidden inline-flex items-center justify-center rounded-xl border border-foreground/10 p-2 text-foreground transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary active:scale-95"
               aria-label="Open navigation"
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
@@ -241,7 +238,7 @@ export const Header = ({ portfolio }: { portfolio: Portfolio }) => {
                 role="dialog"
                 aria-modal="true"
                 aria-label="Mobile navigation"
-                className="absolute inset-3 bottom-3 rounded-[28px] border border-foreground/[0.09] bg-background/70 shadow-2xl shadow-black/10 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/50 overflow-hidden"
+                className="absolute inset-3 bottom-3 rounded-[10px] border border-foreground/[0.09] bg-background/70 shadow-2xl shadow-black/10 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/50 overflow-hidden"
                 initial={{ y: prefersReducedMotion ? 0 : -18, opacity: 0, scale: prefersReducedMotion ? 1 : 0.98 }}
                 animate={{ y: 0, opacity: 1, scale: 1 }}
                 exit={{ y: prefersReducedMotion ? 0 : -12, opacity: 0, scale: prefersReducedMotion ? 1 : 0.985 }}
@@ -249,7 +246,7 @@ export const Header = ({ portfolio }: { portfolio: Portfolio }) => {
               >
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
                 <div className="flex h-full flex-col">
-                  <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-foreground/[0.07]">
+                  <div className="flex items-center justify-between p-2 border-b border-foreground/[0.07]">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-xl bg-gradient-to-tr from-purple-600 via-primary to-sky-400 p-px">
                         <div className="w-full h-full rounded-[11px] bg-background/80 flex items-center justify-center">
@@ -261,32 +258,34 @@ export const Header = ({ portfolio }: { portfolio: Portfolio }) => {
                         <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Explore portfolio</p>
                       </div>
                     </div>
-                    <button onClick={() => setIsMobileMenuOpen(false)} className="inline-flex items-center justify-center rounded-xl border border-foreground/10 bg-foreground/[0.035] p-2.5 text-muted-foreground transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary active:scale-95" aria-label="Close navigation">
+                    <button onClick={() => setIsMobileMenuOpen(false)} className="inline-flex items-center justify-center rounded-xl border border-foreground/10 p-2.5 text-foreground transition-all hover:border-primary/30 hover:bg-primary/10 hover:text-primary active:scale-95" aria-label="Close navigation">
                       <X size={20} />
                     </button>
                   </div>
 
-                  <nav className="flex-1 overflow-y-auto overscroll-contain px-4 py-5" aria-label="Mobile navigation links">
-                    <ul className="space-y-2">
-                      {navItems.map((item, index) => {
-                        const active = isActive(item.href);
-                        return (
-                          <motion.li key={item.name} initial={{ opacity: 0, x: prefersReducedMotion ? 0 : -10 }} animate={{ opacity: 1, x: 0 }} transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.035 }}>
-                            <Link href={item.href} onClick={() => handleNavClick(item.href)} className={`w-full flex items-center justify-between rounded-2xl border px-4 py-3.5 text-left transition-all active:scale-[0.985] ${active ? "border-primary/25 bg-primary/10 text-foreground shadow-sm" : "border-transparent text-muted-foreground hover:border-foreground/10 hover:bg-foreground/[0.045] hover:text-foreground"}`} aria-current={active ? "page" : undefined}>
-                              <span className="text-base font-semibold">{item.name}</span>
-                              <span className={`h-1.5 w-1.5 rounded-full transition-all ${active ? "bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.55)]" : "bg-foreground/15"}`} />
-                            </Link>
-                          </motion.li>
-                        );
-                      })}
-                      <li>
-                        <a href="/resume.pdf" target="_blank" rel="noreferrer" onClick={closeOverlays} className="w-full flex items-center justify-between rounded-2xl border border-primary/20 bg-primary/10 px-4 py-3.5 text-left text-foreground transition-all hover:bg-primary/15 active:scale-[0.985]">
-                          <span className="text-base font-semibold">Resume</span>
-                          <Download className="h-4 w-4 text-primary" />
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                  <div className="relative flex-1 min-h-0">
+                    <nav className="h-full overflow-y-auto overscroll-contain px-4 pt-5 pb-24" aria-label="Mobile navigation links">
+                      <ul className="space-y-2">
+                        {navItems.map((item, index) => {
+                          const active = isActive(item.href);
+                          return (
+                            <motion.li key={item.name} initial={{ opacity: 0, x: prefersReducedMotion ? 0 : -10 }} animate={{ opacity: 1, x: 0 }} transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.035 }}>
+                              <Link href={item.href} onClick={() => handleNavClick(item.href)} className={`w-full flex items-center justify-between rounded-2xl border px-5 py-2.5 text-left transition-all active:scale-[0.985] ${active ? "border-primary/25 bg-primary/10 text-foreground shadow-sm" : "border-transparent text-muted-foreground hover:border-foreground/10 hover:bg-foreground/[0.045] hover:text-foreground"}`} aria-current={active ? "page" : undefined}>
+                                <span className="text-base font-semibold">{item.name}</span>
+                                <span className={`h-1.5 w-1.5 rounded-full transition-all ${active ? "bg-primary shadow-[0_0_10px_hsl(var(--primary)/0.55)]" : "bg-foreground/15"}`} />
+                              </Link>
+                            </motion.li>
+                          );
+                        })}
+                      </ul>
+                    </nav>
+                    <div className="absolute inset-x-0 bottom-0 px-4 pb-5 pt-4 bg-gradient-to-t from-background/95 via-background/80 to-transparent backdrop-blur-sm">
+                      <a href="/resume.pdf" target="_blank" rel="noreferrer" onClick={closeOverlays} className="w-full flex items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-primary-foreground transition-all hover:bg-primary/15 active:scale-[0.985]">
+                        <span className="text-sm font-semibold">Resume</span>
+                        <Download className="h-4 w-4 text-primary-foreground" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
